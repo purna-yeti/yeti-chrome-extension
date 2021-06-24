@@ -1,0 +1,18 @@
+html{
+	width: 400px;
+	height: 600px;
+	overflow: auto;
+}
+.btn-project{
+	visibility: unset;
+}
+.btn-group-horizontal{
+	display: list-item;
+	text-align: start;
+	overflow: scroll;
+	height: 450px;
+}
+.label-project{
+	text-align: start;
+	border: none;
+}

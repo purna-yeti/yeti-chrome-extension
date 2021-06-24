@@ -1,0 +1,83 @@
+<div ng-controller="ProjectCtrl">
+
+    <p>
+        Hi {{name}}, welcome to yeti-hunt! <a ng-click="logout()" ui-sref="login">logout</a>
+     </p>
+    
+
+    <!-- <div class='card'> 
+        <p>first project</p>
+    </div>
+    <div class='card'> 
+        <p>second project</p>
+    </div>
+    <div class='card'> 
+        <p>third project</p>
+    </div> -->
+
+    <div class="btn-group btn-group-horizontal" role="group" aria-label="Project Selection Group">
+        <input type="radio" class="btn-check btn-project" name="btnradio" id="btnradio1" autocomplete="off" checked="">
+        <div>
+            <label class="btn btn-outline-primary text-warning label-project" for="btnradio1">
+                <h5>Intermediate Business Mindset </h5>
+                <h6 class="text-info">| Kelompok Belajar</h6>
+                <time class="text-secondary" datetime="2021-06-23T09:34:58.022Z">56m ago</time>
+                <a href="#" ng-click="samplef()" class="text-success">more</a>
+            </label>
+        </div>
+
+        <input type="radio" class="btn-check btn-project" name="btnradio" id="btnradio2" autocomplete="off" checked="">
+        <div>
+            <label class="btn btn-outline-primary text-warning label-project" for="btnradio2">
+                <h5>Advanced Business Mindset </h5>
+                <h6 class="text-info">| Kelompok Belajar</h6>
+                <time class="text-secondary" datetime="2021-06-23T09:34:58.022Z">3h ago</time>
+                <a href="#" ng-click="samplef()" class="text-success">more</a>
+            </label>
+        </div>
+
+        <input type="radio" class="btn-check btn-project" name="btnradio" id="btnradio3" autocomplete="off" checked="">
+        <div>
+            <label class="btn btn-outline-primary text-warning label-project" for="btnradio3">
+                <h5>Beginner Business Mindset best story ever </h5>
+                <h6 class="text-info">| Kelompok Belajar</h6>
+                <time class="text-secondary" datetime="2021-06-23T09:34:58.022Z">4d ago</time>
+                <a href="#" ng-click="samplef()" class="text-success">more</a>
+            </label>
+        </div>
+
+        <input type="radio" class="btn-check btn-project" name="btnradio" id="btnradio4" autocomplete="off" checked="">
+        <div>
+            <label class="btn btn-outline-primary text-warning label-project" for="btnradio4">
+                <h5>Beginner Business Mindset best </h5>
+                <h6 class="text-info">| Kelompok Belajar</h6>
+                <time class="text-secondary" datetime="2021-06-23T09:34:58.022Z">4d ago</time>
+                <a href="#" ng-click="samplef()" class="text-success">more</a>
+            </label>
+        </div>
+
+        <input type="radio" class="btn-check btn-project" name="btnradio" id="btnradio5" autocomplete="off" checked="">
+        <div>
+            <label class="btn btn-outline-primary text-warning label-project" for="btnradio5">
+                <h5>Beginner Business Mindset </h5>
+                <h6 class="text-info">| Kelompok Belajar</h6>
+                <time class="text-secondary" datetime="2021-06-23T09:34:58.022Z">4d ago</time>
+                <a href="#" ng-click="samplef()" class="text-success">more</a>
+            </label>
+        </div>
+    </div>
+    <!-- <a ng-click="showSearchOptions()" class="btn btn-block btn-info">
+        Scrape Search Results</a>
+        <br/>
+
+        <a ng-click="fetchMyHistory()" class="btn btn-block btn-info">
+        Scrape My Purchase History</a>
+        <br/>
+        
+            <div class="row">
+              <div class="jumbotron text-muted text-center">
+                  <p>Need Assistance?
+                    <a target="_blank" href="https://yeti-hunt.com/contact">Contact Support</a>!</p>
+              </div>
+          </div> -->
+</div>
