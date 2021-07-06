@@ -1,0 +1,15 @@
+
+<form name="myForm" ng-controller="ExampleController" ng-repeat="project in projects" for="{{ project }}">
+    <label class="btn btn-outline-primary text-warning label-project" for="btnradio1">
+        <input 
+        type="radio" 
+        class="btn-check btn-project" 
+        name="btnradio" id="{{ project.id }} " 
+        autocomplete="off" 
+        checked="">
+        <h5>{{ project.title }} </h5>
+        <h6 class="text-info">| {{ project.teamTitle }}</h6>
+        <time class="text-secondary" datetime="{{ project.updatedAt }}">56m ago</time>
+        <a href="#" ng-click="samplef()" class="text-success">more</a>
+    </label>
+</form>

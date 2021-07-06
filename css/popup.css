@@ -4,7 +4,7 @@ html{
 	overflow: auto;
 }
 .btn-project{
-	visibility: unset;
+	visibility: visible;
 }
 .btn-group-horizontal{
 	display: list-item;
@@ -15,4 +15,11 @@ html{
 .label-project{
 	text-align: start;
 	border: none;
+}
+.banner{
+	position:fixed;
+	top: 0;
+	right: 0;
+	width: 300px;
+	border: 3px solid #73AD21;
 }

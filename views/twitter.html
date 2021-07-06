@@ -1,0 +1,10 @@
+<label class="btn btn-outline-primary text-warning label-project" 
+    ng-repeat="project in projects" for="{{ project }}">
+    <input type="radio" ng-checked="$first" name="selecttable"
+        class="btn-check btn-project"
+        ng-model="radioSelected" value="{{ project.id }}" id="{{ project }}"> 
+    <h5>{{ project.title }} </h5>
+    <h6 class="text-info">| {{ project.teamTitle }}</h6>
+    <time class="text-secondary" datetime="{{ project.updatedAt }}">{{ project.updatedAt }}</time>
+    <a href="#" ng-click="samplef()" class="text-success">more</a>
+</label>

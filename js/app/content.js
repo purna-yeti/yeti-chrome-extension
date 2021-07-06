@@ -1,6 +1,78 @@
 console.log('content script ran');
 var url = window.location.href;
-console.log('url: ',url);
+console.log('url: ', url);
+// console.log('title: ', document.getElementsByTagName('title')[0].text)
+
+function appendText() {
+      let htmlString = `
+      <div id="yeti">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+        .yeti-btn {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+          padding: 8px 6px;
+          font-size: 14px;
+          cursor: pointer;
+          width: 60px;
+          border-radius: 15px;
+        }
+        .yeti-btn:hover {
+          background-color: RoyalBlue;
+        }
+        .yeti-recommend {
+          background-color: gray;
+          font-size: 14px;
+          padding: 8px 6px;
+          text-color: white;
+        }
+        .yeti-banner {
+          all: initial; 
+          position:fixed; 
+          bottom: 0%; 
+          right:0;
+          z-index: 10000;
+        }
+        .yeti-title {
+          color: white;
+        }
+        .yeti-text {
+          color: white;
+        }
+        </style>
+        <div id="yeti-banner" class="yeti-banner">
+          <button class="yeti-btn"><i class="fa fa-thumbs-up"></i>130</button>
+          <button class="yeti-btn"><i class="fa fa-thumbs-down"></i>5</button>
+          <button class="yeti-btn"><i class="fa fa-heart"></i>78</button>
+          <a href="#yeti-recommend">
+            <button class="yeti-btn"><i class="fa fa-paw"></i>more</button>
+          </a>
+        </div>
+        <div id="yeti-recommend" class="yeti-recommend">
+          <h2 class='yeti-title'>Yeti Recommend</h2>
+          <h3 class='yeti-title'>**My Gym Bros** also recommend the following</h3>
+          <p class='yeti-text'> www.best-resource.com </p>
+          <p class='yeti-text'> www.blog-best.com </p>
+          <h3 class='yeti-title'>**Your friends** recommend the following</h3>
+          <p class='yeti-text'> www.vimeo-funny.com </p>
+          <p class='yeti-text'> www.another-youtube.com </p>
+          <h3 class='yeti-title'>Best matching coursera course</h3>
+          <p class='yeti-text'> 15$ paid coursera video 4 </p>
+          <p class='yeti-text'> free paid coursera video 6 </p>
+          <h3 class='yeti-title'>**Reddit** bros have something to say...</h3>
+          <p class='yeti-text'> 15$ paid coursera video 4 </p>
+          <p class='yeti-text'> free paid coursera video 6 </p>
+        </div>
+      </div>
+      `
+      let banner = $.parseHTML(htmlString);
+      $('body').append(banner);
+    // $("body").append(txt1, txt2, txt3);      // Append the new elements
+  }
+// chrome.runtime.sendMessage({type: "onContentInit", data: {url, document}})
+appendText();
+
 // let page_number = 1;
 // let productDataAfterAJAX = [];
 

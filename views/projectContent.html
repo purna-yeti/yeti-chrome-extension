@@ -1,0 +1,21 @@
+<div ng-controller="ProjectContentCtrl">
+
+    <p>
+        <a ng-click="backToProject()" ui-sref="project">back...</a>
+    </p>
+
+    <div name="project-content" class="btn-group-horizontal">
+        <span ng-repeat="content in projectContents" class="btn btn-outline-primary text-warning label-project">
+            <label 
+                for="content-{{content.contentId}}" >
+                <h5>{{ content.contentTitle }} </h5>
+                <h6 class="text-info">{{ content.contentHostname }}</h6>
+                <h6 class="text-info">{{ content.isLike }} like, {{content.isDislike}} dislike, {{content.isFavourite}} favourite</h6>
+                <time class="text-secondary" datetime="{{ content.lastVisitAt }}">{{ content.lastVisitAtText }}</time>
+                <a href="{{ content.contentUri }}" class="text-success">alt-click to open url</a>
+            </label>
+        </span>
+    </div>
+
+
+</div>
