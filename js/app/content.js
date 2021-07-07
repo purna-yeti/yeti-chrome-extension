@@ -1,10 +1,94 @@
-console.log('content script ran');
-var url = window.location.href;
-console.log('url: ', url);
-// console.log('title: ', document.getElementsByTagName('title')[0].text)
+// console.log('content script ran');
+
+const page = {
+  uri: window.location.href,
+  hostname: window.location.hostname,
+  pathname: window.location.pathname,
+  search: window.location.search,
+  title: document.title,
+}
+const likeIcon = '<i class="fa fa-thumbs-up"></i>';
+const dislikeIcon = '<i class="fa fa-thumbs-down"></i>';
+const favIcon = '<i class="fa fa-heart"></i>';
+const pawIcon = '<i class="fa fa-paw"></i>';
+
+
+function handleStatusClick(buttonId, textId, statusKey, statusVal) {
+  // console.log('content statusClick', buttonId, textId, statusKey, statusVal);
+  let $button = $(buttonId);
+  let $text = $(textId);
+  chrome.runtime.sendMessage({
+    type: "statusClick", data: {
+      statusKey,
+      statusVal,
+      ...page
+    }
+  }, function (resp) {
+    if (!resp.user || !resp.response.id) {
+      $('#yeti-banner').append("Yeti logged out");
+      $('#yeti-banner').addClass("yeti-banner-logout");
+    } else {
+      $button.removeClass();
+      $button.addClass(statusVal ? "yeti-btn-clicked" : "yeti-btn");
+      $text.text(parseInt($button.text()) + (statusVal ? 1 : -1));
+    }
+
+  });
+}
+
+// init
+chrome.runtime.sendMessage({ type: "onContentInit", data: page },
+  function (response) {
+    $('#yeti-banner').empty();
+    appendText();
+    // console.log(response);
+
+    if (!response.user) {
+      $('#yeti-banner').append("Yeti logged out");
+      $('#yeti-banner').addClass("yeti-banner-logout");
+    } else {
+      function insertButton(buttonId, textId, icon, statusKey) {
+        let $button = $("<button>",
+          {
+            id: buttonId,
+            class: response.resp.user[statusKey] ? "yeti-btn-clicked" : "yeti-btn",
+          });
+        $button.click(
+          () => {
+            handleStatusClick(
+              `#${buttonId}`,
+              `#${textId}`,
+              statusKey,
+              $button.attr('class') === 'yeti-btn');
+          }
+        );
+        $button.append(
+          `${icon}<span id="${textId}">${response.resp.team[statusKey]}</span>`
+        );
+        $('#yeti-banner').append($button);
+      }
+
+      insertButton('yeti-like-button', 'yeti-like-count', likeIcon, 'isLike');
+      insertButton('yeti-dislike-button', 'yeti-dislike-count', dislikeIcon, 'isDislike');
+      insertButton('yeti-favourite-button', 'yeti-favourite-count', favIcon, 'isFavourite');
+
+      var $pawButton = $("<button>",
+        {
+          id: "yeti-paw-button",
+          class: "yeti-btn"
+        });
+      $pawButton.click();
+      $pawButton.append(`<i class="fa fa-paw"></i>${response.resp.team.visit}`)
+      $('#yeti-banner').append($pawButton);
+
+    }
+
+  })
+
+
 
 function appendText() {
-      let htmlString = `
+  let htmlString = `
       <div id="yeti">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
@@ -17,9 +101,24 @@ function appendText() {
           cursor: pointer;
           width: 60px;
           border-radius: 15px;
+          top: 50%;
+        }
+        .yeti-btn-clicked {
+          background-color: RoyalBlue;
+          border: none;
+          color: white;
+          padding: 8px 6px;
+          font-size: 14px;
+          cursor: pointer;
+          width: 60px;
+          border-radius: 15px;
+          top: 50%;
         }
         .yeti-btn:hover {
           background-color: RoyalBlue;
+        }
+        .yeti-btn-clicked:hover {
+          background-color: DodgerBlue;
         }
         .yeti-recommend {
           background-color: gray;
@@ -34,6 +133,11 @@ function appendText() {
           right:0;
           z-index: 10000;
         }
+        .yeti-banner-logout {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+        }
         .yeti-title {
           color: white;
         }
@@ -42,280 +146,11 @@ function appendText() {
         }
         </style>
         <div id="yeti-banner" class="yeti-banner">
-          <button class="yeti-btn"><i class="fa fa-thumbs-up"></i>130</button>
-          <button class="yeti-btn"><i class="fa fa-thumbs-down"></i>5</button>
-          <button class="yeti-btn"><i class="fa fa-heart"></i>78</button>
-          <a href="#yeti-recommend">
-            <button class="yeti-btn"><i class="fa fa-paw"></i>more</button>
-          </a>
-        </div>
-        <div id="yeti-recommend" class="yeti-recommend">
-          <h2 class='yeti-title'>Yeti Recommend</h2>
-          <h3 class='yeti-title'>**My Gym Bros** also recommend the following</h3>
-          <p class='yeti-text'> www.best-resource.com </p>
-          <p class='yeti-text'> www.blog-best.com </p>
-          <h3 class='yeti-title'>**Your friends** recommend the following</h3>
-          <p class='yeti-text'> www.vimeo-funny.com </p>
-          <p class='yeti-text'> www.another-youtube.com </p>
-          <h3 class='yeti-title'>Best matching coursera course</h3>
-          <p class='yeti-text'> 15$ paid coursera video 4 </p>
-          <p class='yeti-text'> free paid coursera video 6 </p>
-          <h3 class='yeti-title'>**Reddit** bros have something to say...</h3>
-          <p class='yeti-text'> 15$ paid coursera video 4 </p>
-          <p class='yeti-text'> free paid coursera video 6 </p>
-        </div>
+         </div>
+        
       </div>
       `
-      let banner = $.parseHTML(htmlString);
-      $('body').append(banner);
-    // $("body").append(txt1, txt2, txt3);      // Append the new elements
-  }
-// chrome.runtime.sendMessage({type: "onContentInit", data: {url, document}})
-appendText();
-
-// let page_number = 1;
-// let productDataAfterAJAX = [];
-
-// // Fetching Orders Page Data
-// if(url.includes('amazon.com/gp/css/order-history')){
-// 	//first landing on the main orders page
-// 	//send all the dropDown Options to the Background page
-// 	//navigate to a specific Time Period ()
-  	
-// 	let purchaseYears = [];
-// 	var theOptions = document.querySelectorAll('#timePeriodForm #orderFilter')[0].options;
-// 	for (i = 0; i < theOptions.length; i++) { 
-//     	purchaseYears.push(theOptions[i].value);
-// 	}
-//     sendToBackground("purchaseYears", purchaseYears);
-//     setTimeout(function(){ 
-// 	    window.location.href = 'https://www.amazon.com/gp/your-account/order-history?orderFilter='+purchaseYears.slice(-1)[0]+'&ahf=on'; 
-//     	}, 
-//     10000);
-// } else if (url.includes('amazon.com/gp/your-account/') && url.includes('&ahf=on') && url.includes('orderFilter=')){
-//     //got to yearly page - need to:
-//     //checkAndGetPagination
-//     //send OrderDetails to the Background
-//     console.log('on a yearly page now');
-    
-//     if(getYear()=='undefined'){
-//         chrome.runtime.sendMessage({type: 'fetchingComplete', data: {fetchingComplete: true} }, 
-//                 function(response){
-//                     console.log('this is the response from the popup page: ',response);
-//                 }
-//         );
-        
-//         setTimeout(function(){ 
-//             window.location.href = 'https://yeti-hunt.com/user/crud/blogs';
-//             }, 
-//         3000);
-//     }
-
-//     window.scrollTo(0,document.querySelector(".navLeftFooter").scrollHeight+5000);
-//     fetchYearlyOrders();
-
-//     setTimeout(function(){ 
-//         sendToBackground("ordersPageDetails", 
-//                          {"purchase_year": getYear(),
-//                           "page_number": getPageNumber(),
-//                           "orderDetails": productDataAfterAJAX,
-//                           "paginationDetails": checkAndGetPagination()});
-//         }, 
-//     10000);
-// }
-
-
-// function sendToBackground(eventName, eventData, callback){
-// 	chrome.runtime.sendMessage({type: eventName, data: eventData }, 
-//             function(response){
-//                 console.log('this is the response from the background page for the '+ eventName+ ' Event: ',response);
-//                 if(eventName=='ordersPageDetails'){
-//                     if(response.nextWhat == 'nextYear'){
-//                       window.location.href = 'https://www.amazon.com/gp/your-account/order-history?orderFilter=year-'+response.year+'&ahf=on';
-//                     } else if (response.nextWhat == 'nextPage' && typeof response.year != 'undefined'){
-//                       window.location.href = 'https://www.amazon.com/gp/your-account/order-history/ref=ppx_yo_dt_b_pagination_1_2_3_4_5?ie=UTF8&orderFilter=year-'+response.year+'&search=&startIndex='+response.startIndex+'&ahf=on';
-//                     }
-//                 } else if(eventName=='searchPageData'){
-//                     console.log('searchPageData response block ran');
-//                     if(response.nextWhat == 'nextPage'){
-//                         window.location.href = 'https://www.amazon.com/s?k='+response.searchKeyword+'&asf=on&page='+response.nextPageNumber+'&i=stripbooks-intl-ship';
-//                     } else if(response.nextWhat == 'nextKeyword'){
-//                         console.log('reached nextKeyword conditional block');
-//                         window.location.href = 'https://www.amazon.com/s?k='+response.searchKeyword+'&asf=on&page=1&i=stripbooks-intl-ship';
-//                     }
-//                 }
-//             }
-//     );
-// }
-
-// //helpers
-// function getURLParam(paramName){
-//   let queryString = window.location.search;
-//   let urlParams = new URLSearchParams(queryString);
-//   return urlParams.get(paramName);  
-// }
-
-
-// function getYear(){
-//   let orderFilter = getURLParam('orderFilter');
-//   if(orderFilter){
-//       return orderFilter.split('-')[1];
-//   } else {
-//     return 'orderFilter not found';
-//   }
-// }
-
-// function getPageNumber(){
-//     let startIndex = getURLParam('startIndex');
-//     if(startIndex){
-//         return (startIndex/10)*2;   
-//     } else {
-//         return 1;
-//     }
-// }
-
-// function checkAndGetPagination(){
-//     let pageNumbers = [];
-//     let pagination = document.querySelectorAll('.pagination-full');
-//     if(pagination[0]){
-//         let extractedNumbers = pagination[0].innerText.match(/\d/g);
-//         for (i = 0; i < extractedNumbers.length; i++) { 
-//             pageNumbers.push(parseInt(extractedNumbers[i]));
-//         }
-//         return pageNumbers;
-//     } else {
-//         return [];
-//     }
-// }
-
-// function fetchYearlyOrders(){
-//     let products = document.querySelectorAll('.a-fixed-left-grid-inner')
-//     for (i = 0; i < products.length; i++) {
-//         let item = {};
-//         let cleanedUpValues = products[i].innerText.split("\n");
-//         item.product_title = cleanedUpValues[0];    
-//         item.product_by = cleanedUpValues[1]; 
-//         item.product_cost = cleanedUpValues[cleanedUpValues.indexOf('Buy it again')-1];
-//         item.product_link = products[i].firstElementChild.firstElementChild.firstElementChild.href;   
-//         let imgurl = products[i].firstElementChild.firstElementChild.firstElementChild.innerHTML.split("\"");
-//         item.product_imgurl = imgurl[imgurl.findIndex(element => element.includes("images/I"))];
-//         fetchSummaryAndReviews(item);
-//     }
-// }
-
-// function fetchSummaryAndReviews(product){
-//     ajaxGet(product.product_link.split('amazon.com')[1], function(response){
-//         let element = $($.parseHTML( response ));
-//         product.product_summary = element.find("div").attr("data-feature-name", 'editorialReviews').prev("noscript")[0].innerHTML;
-//         // product.product_summary = element.find("div [id*=dmusic_tracklist_player]");
-//         let reviews = element.find("div [id*=customer_review]");
-//         product.product_reviews = [];
-//         //save reviews html in array
-//         for (i = 0; i < reviews.length; i++) {
-//           let review = reviews[i];
-//           product.product_reviews.push($(review).find('div:nth-child(5)>span>div>div>span')[0].innerHTML.trim());
-//         }
-//         productDataAfterAJAX.push(product);
-//     })
-// }
-
-// function ajaxGet(url, callback){
-//   $.ajax({
-//         url: url, 
-//         type: 'GET',
-//         success: function(a) {
-//           callback(a);
-//         },
-//         error: function(a) {
-//           console.log("Error: ",a);
-//         }
-//     });
-// }
-
-
-// // Fetching Search Page Data
-// if(url.includes('amazon.com/s?k=') && url.includes('asf=on')){
-//   let products = document.querySelectorAll('.s-desktop-content div .sg-col-inner');
-//   for (i = 0; i < products.length; i++) {
+  let banner = $.parseHTML(htmlString);
+  $('body').append(banner);
   
-//     if(products[i].innerText!=''){
-//       let product = {};
-//       let image = products[i].querySelector('img');
-//       let product_link = products[i].querySelector('.a-size-mini a');
-  
-//       if(image!= null && product_link){
-//             product.product_link = product_link.href;
-//             let productBriefs = products[i].innerText.split('\n');
-  
-//             if(productBriefs[0] == 'Best Seller'){
-//               product.best_seller = true;
-//               productBriefs.splice(0, 1);
-//             } else {
-//               product.best_seller = false;
-//             }
-  
-//             product.product_title = productBriefs[0];
-
-//             if(productBriefs[1]){
-//                 product.product_by = productBriefs[1].split('by ')[1];  
-//             }
-            
-//             if(product.product_by){
-//               product.product_by = product.product_by.split('|')[0].trim();  
-//             }
-            
-//             if(productBriefs[2] && isNaN(parseInt(productBriefs[3]))){
-//                 productBriefs.splice(2, 2);
-//             } 
-
-//             if(productBriefs[2]){
-//               product.product_rating = productBriefs[2].split(' ')[0];
-//             }
-            
-//             if(productBriefs[3]){
-//               product.total_ratings = parseFloat(productBriefs[3].replace(/,/g, ''));  
-//             }
-            
-//             product.main_format = productBriefs[4]; 
-//             product.product_imgurl = image.src;
-  
-//             for (y = 5; y < productBriefs.length; y++) {
-//               if(productBriefs[y].includes('Other format')){
-//                   product.other_formats = productBriefs[y]; 
-//               }
-//               if(productBriefs[y].includes('$') && !productBriefs[y]!='$0' && !productBriefs[y]!='$0.00'){
-//                   product.product_cost = productBriefs[y];
-//                   continue;
-//               }    
-//             }
-            
-//             if(productBriefs.length <=30){
-//                 fetchSummaryAndReviews(product); 
-//             }
-//       }
-//     }
-//   }
-
-//   setTimeout(function(){ 
-//     sendToBackground("searchPageData", 
-//              {"searchPageData": productDataAfterAJAX,
-//               "searchKeyword": getURLParam('k'),
-//               "totalSearchPages": getTotalSearchPages(),
-//               "searchPageNumber": getSearchPageNumber()});
-//     }, 
-//   10000);
-// }
-
-// function getTotalSearchPages(){
-//   let pagination = document.querySelectorAll('.a-pagination');
-//   if(pagination[0]){
-//       let paginationDetails = pagination[0].textContent.split('\n') 
-//       return parseInt(paginationDetails.slice(-3)[0].trim());
-//   } else {
-//       return {mutliPage:false};
-//   }
-// }
-
-// function getSearchPageNumber(){
-//   return getURLParam('page') || 1;
-// }
+}

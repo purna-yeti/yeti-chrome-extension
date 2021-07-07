@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../yeti-backend"
+		},
+		{
+			"path": "../../../../udemy-fullstack-chrome-extension-master"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}

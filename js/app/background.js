@@ -1,5 +1,5 @@
 console.log('background script ran');
-let dev = true;
+let dev = false;
 let domain = dev ? "http://localhost:8000/" : 'https://yeti-backend-v5omsitsja-uc.a.run.app/';
 
 let recommendations = [
@@ -37,7 +37,25 @@ chrome.runtime.onMessage.addListener(
         break;
       case "onContentInit":
         console.log('background onContentInit');
-        sendResponse(getStorageItem('user'));
+        if (!getStorageItem('user') || !getStorageItem('project')) {
+          sendResponse({})
+        } else {
+          ajaxCall("POST", "content/visit",
+            {
+              ...message.data,
+              projectId: getStorageItem('project').projectId
+            },
+            getStorageItem('user').token,
+            function (response) {
+              setStorageItem('page', message.data);
+              sendResponse({
+                user: getStorageItem('user'),
+                project: getStorageItem('project'),
+                resp: response
+              });
+            })
+        }
+
         return true;
         break;
       case "login":
@@ -54,6 +72,7 @@ chrome.runtime.onMessage.addListener(
       case "logout":
         console.log('background logout');
         setStorageItem('user', null);
+        setStorageItem('project', null);
         sendResponse(null);
         return true;
         break;
@@ -76,7 +95,6 @@ chrome.runtime.onMessage.addListener(
         });
         return true;
         break;
-      
       case "onProjectContentInit":
         console.log('background onProjectContentInit', message.data);
         ajaxCall("GET",
@@ -85,7 +103,6 @@ chrome.runtime.onMessage.addListener(
             if (resp.status === 401) {
               sendResponse(resp.status);
             } else {
-              console.log("XXX", resp);
               setStorageItem('projectContents', resp);
               let payload = {
                 user: getStorageItem('user'),
@@ -105,7 +122,34 @@ chrome.runtime.onMessage.addListener(
         sendResponse(payload);
         return true;
         break;
+      case "statusClick":
+        console.log('background statusClick', message.data);
+        if (!getStorageItem('user') || !getStorageItem('project')) {
+          sendResponse({});
+        } else {
+          let bodyStatusClick = {
+            projectId: getStorageItem('project').projectId,
+            ...message.data
+          };
+          bodyStatusClick[message.data.statusKey] = message.data.statusVal;
+          ajaxCall("PUT",
+            `content/status`,
+            bodyStatusClick,
+            getStorageItem('user').token,
+            function (resp) {
+              if (resp.status === 401) {
+                sendResponse(resp.status);
+              } else {
+                sendResponse({
+                  user: getStorageItem('user'),
+                  response: resp
+                });
+              }
+            });
+        }
 
+        return true;
+        break;
       // case 'initiateHistoryScraping':
       //     console.log('message: ',message);
       //     chrome.tabs.create({url: 'https://www.amazon.com/gp/css/order-history?ahf=on'});

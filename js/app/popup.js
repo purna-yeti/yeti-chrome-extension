@@ -144,9 +144,9 @@ yetiHunt.controller("ProjectContentCtrl", ['$scope', '$state', '$stateParams',
         let defaultProjectContents = [
             {
                 contentId: "ccc0",
-                contentTitle: "Loading content...",
+                contentTitle: "Oops, cant find content",
                 contentUrl: "www.google.com/search?q=yetihunt",
-                contentHost: "please wait...",
+                contentHost: "try go back",
                 lastVisitAt: null,
                 lastVisitAtText: "...",
                 isLike: 0,
@@ -162,10 +162,8 @@ yetiHunt.controller("ProjectContentCtrl", ['$scope', '$state', '$stateParams',
                 data: { projectId: $stateParams.projectId }
             },
                 function (response) {
-                    console.log("popup response back from background", response)
                     if (!!response && !!response.user && !!response.projectContents) {
                         $scope.name = response.user.username;
-                        console.log("YYY", response);
                         if (response.projectContents.length > 0) {
                             $scope.projectContents = response.projectContents;
                         } else {
@@ -188,7 +186,7 @@ yetiHunt.controller("ProjectContentCtrl", ['$scope', '$state', '$stateParams',
                     if (!!response && !!response.user) {
                         $scope.name = response.user.username;
                         $scope.projectContents = defaultProjectContents;
-                        $state.go("project"); // self loop to attach username again
+                        $state.go("project"); 
                     } else {
                         $state.go("login");
                     }
