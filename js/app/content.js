@@ -43,7 +43,7 @@ chrome.runtime.sendMessage({ type: "onContentInit", data: page },
     appendText();
     // console.log(response);
 
-    if (!response.user) {
+    if (!response.user || response.resp.status == 401) {
       $('#yeti-banner').append("Yeti logged out");
       $('#yeti-banner').addClass("yeti-banner-logout");
     } else {
