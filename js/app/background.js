@@ -1,5 +1,5 @@
 console.log('background script ran');
-let local = true;
+let local = false;
 let domain = local ? "http://localhost:8000/" : 'https://yeti-backend-v5omsitsja-uc.a.run.app/';
 
 let recommendations = [
