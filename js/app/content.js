@@ -8,172 +8,169 @@ const page = {
   title: document.title,
   hash: window.location.hash,
 }
-const likeIcon = '<i class="fa fa-thumbs-up"></i>';
-const dislikeIcon = '<i class="fa fa-thumbs-down"></i>';
-const favIcon = '<i class="fa fa-heart"></i>';
-const pawIcon = '<i class="fa fa-paw"></i>';
+
+appendText();
+// const likeIcon = '<i class="fa fa-thumbs-up"></i>';
+// const dislikeIcon = '<i class="fa fa-thumbs-down"></i>';
+// const favIcon = '<i class="fa fa-heart"></i>';
+// const pawIcon = '<i class="fa fa-paw"></i>';
 
 
-let s = document.createElement('script');
-s.type = 'text/javascript';
-s.src = chrome.extension.getURL('angular.elements.bundle.js');
-s.onload = function() {
-    this.parentNode.removeChild(this);
-};
-try {
-    (document.head || document.documentElement).appendChild(s);
-} catch (e) {
-    console.log(e);
-}
+// let s = document.createElement('script');
+// s.type = 'text/javascript';
+// s.src = chrome.extension.getURL('angular.elements.bundle.js');
+// s.onload = function() {
+//     this.parentNode.removeChild(this);
+// };
+// try {
+//     (document.head || document.documentElement).appendChild(s);
+// } catch (e) {
+//     console.log(e);
+// }
 
-function handleStatusClick(buttonId, textId, statusKey, statusVal) {
-  // console.log('content statusClick', buttonId, textId, statusKey, statusVal);
-  let $button = $(buttonId);
-  let $text = $(textId);
-  chrome.runtime.sendMessage({
-    type: "statusClick", data: {
-      statusKey,
-      statusVal,
-      ...page
-    }
-  }, function (resp) {
-    if (!resp.user || !resp.response.id) {
-      $('#yeti-banner').append("Yeti logged out");
-      $('#yeti-banner').addClass("yeti-banner-logout");
-    } else {
-      $button.removeClass();
-      $button.addClass(statusVal ? "yeti-btn-clicked" : "yeti-btn");
-      $text.text(parseInt($button.text()) + (statusVal ? 1 : -1));
-    }
+// function handleStatusClick(buttonId, textId, statusKey, statusVal) {
+//   // console.log('content statusClick', buttonId, textId, statusKey, statusVal);
+//   let $button = $(buttonId);
+//   let $text = $(textId);
+//   chrome.runtime.sendMessage({
+//     type: "statusClick", data: {
+//       statusKey,
+//       statusVal,
+//       ...page
+//     }
+//   }, function (resp) {
+//     if (!resp.user || !resp.response.id) {
+//       $('#yeti-banner').append("Yeti logged out");
+//       $('#yeti-banner').addClass("yeti-banner-logout");
+//     } else {
+//       $button.removeClass();
+//       $button.addClass(statusVal ? "yeti-btn-clicked" : "yeti-btn");
+//       $text.text(parseInt($button.text()) + (statusVal ? 1 : -1));
+//     }
 
-  });
-}
+//   });
+// }
 
 // init
 chrome.runtime.sendMessage({ type: "onContentInit", data: page },
   function (response) {
-    $('#yeti-banner').empty();
+     $('#yeti-banner').empty();
     appendText();
     // console.log(response);
 
-    if (!response.user || response.resp.status == 401) {
-      $('#yeti-banner').append("Yeti logged out");
-      $('#yeti-banner').addClass("yeti-banner-logout");
-    } else {
-      function insertButton(buttonId, textId, icon, statusKey) {
-        let $button = $("<button>",
-          {
-            id: buttonId,
-            class: response.resp.user[statusKey] ? "yeti-btn-clicked" : "yeti-btn",
-          });
-        $button.click(
-          () => {
-            handleStatusClick(
-              `#${buttonId}`,
-              `#${textId}`,
-              statusKey,
-              $button.attr('class') === 'yeti-btn');
-          }
-        );
-        $button.append(
-          `${icon}<span id="${textId}">${response.resp.team[statusKey]}</span>`
-        );
-        $('#yeti-banner').append($button);
-      }
+    // if (!response.user || response.resp.status == 401) {
+    //   $('#yeti-banner').append("Yeti logged out");
+    //   $('#yeti-banner').addClass("yeti-banner-logout");
+    // } else {
+    //   function insertButton(buttonId, textId, icon, statusKey) {
+    //     let $button = $("<button>",
+    //       {
+    //         id: buttonId,
+    //         class: response.resp.user[statusKey] ? "yeti-btn-clicked" : "yeti-btn",
+    //       });
+    //     $button.click(
+    //       () => {
+    //         handleStatusClick(
+    //           `#${buttonId}`,
+    //           `#${textId}`,
+    //           statusKey,
+    //           $button.attr('class') === 'yeti-btn');
+    //       }
+    //     );
+    //     $button.append(
+    //       `${icon}<span id="${textId}">${response.resp.team[statusKey]}</span>`
+    //     );
+    //     $('#yeti-banner').append($button);
+    //   }
 
-      insertButton('yeti-like-button', 'yeti-like-count', likeIcon, 'isLike');
-      insertButton('yeti-dislike-button', 'yeti-dislike-count', dislikeIcon, 'isDislike');
-      insertButton('yeti-favourite-button', 'yeti-favourite-count', favIcon, 'isFavourite');
+    //   insertButton('yeti-like-button', 'yeti-like-count', likeIcon, 'isLike');
+    //   insertButton('yeti-dislike-button', 'yeti-dislike-count', dislikeIcon, 'isDislike');
+    //   insertButton('yeti-favourite-button', 'yeti-favourite-count', favIcon, 'isFavourite');
 
-      var $pawButton = $("<button>",
-        {
-          id: "yeti-paw-button",
-          class: "yeti-btn"
-        });
-      $pawButton.click();
-      $pawButton.append(`<i class="fa fa-paw"></i>${response.resp.team.visit}`)
-      $('#yeti-banner').append($pawButton);
+    //   var $pawButton = $("<button>",
+    //     {
+    //       id: "yeti-paw-button",
+    //       class: "yeti-btn"
+    //     });
+    //   $pawButton.click();
+    //   $pawButton.append(`<i class="fa fa-paw"></i>${response.resp.team.visit}`)
+    //   $('#yeti-banner').append($pawButton);
 
-    }
+    // }
 
   })
 
 
 
 function appendText() {
+  console.log("YYYYYY");
   let htmlString = `
-      <div id="yeti">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <style>
-          .yeti-btn {
-            background-color: DodgerBlue;
-            border: none;
-            color: white;
-            padding: 8px 6px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 60px;
-            border-radius: 15px;
-            top: 50%;
-          }
-          .yeti-btn-clicked {
-            background-color: RoyalBlue;
-            border: none;
-            color: white;
-            padding: 8px 6px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 60px;
-            border-radius: 15px;
-            top: 50%;
-          }
-          .yeti-btn:hover {
-            background-color: RoyalBlue;
-          }
-          .yeti-btn-clicked:hover {
-            background-color: DodgerBlue;
-          }
-          .yeti-recommend {
-            background-color: gray;
-            font-size: 14px;
-            padding: 8px 6px;
-            text-color: white;
-          }
-          .yeti-banner {
-            all: initial; 
-            position:fixed; 
-            bottom: 0%; 
-            right:0;
-            z-index: 10000;
-          }
-          .yeti-banner-logout {
-            background-color: DodgerBlue;
-            border: none;
-            color: white;
-          }
-          .yeti-title {
-            color: white;
-          }
-          .yeti-text {
-            color: white;
-          }
-        </style>
-        <div id="yeti-banner" class="yeti-banner">
-        
-        <h1 ng-controller="HelloWorldCtrl">{{message}}</h1>
-         <script>  
-              angular.module("app", []).controller("HelloWorldCtrl", function($scope) {  
-                console.log("XXXXXXXXXXXXX");
-                $scope.message="Hello World"; 
-              } )
-          </script> 
-         </div>
+  <div id="yeti-container">
 
-         
-        
+  <div id="yeti-widget">
+    <!-- Include a nav DIV with the same name as the draggable DIV, followed by "nav" -->
+
+    <div id="yeti-widget-content-lg" class="yeti-remove">
+      <div id="yeti-widget-content-lg-nav">
+        <div id="yeti-widget-content-lg-close">⤬</div>
+        <div id="yeti-widget-content-lg-title">Project Prealpha0</div>
       </div>
-      `
+
+      <div id="yeti-widget-content-lg-content">
+        <div id="yeti-widget-visit-expand">
+          
+          Stat
+        
+        </div>
+        <div id="yeti-widget-favourite-expand">
+          
+          Yeti
+        
+        </div>
+      </div>
+    </div>
+    
+    <div id="yeti-widget-content-sm">
+      <div id="yeti-widget-nav">
+        <img id="yeti-widget-icon" src="static/yeti_icon.png" alt="yeti">
+      </div>
+
+      <div class="yeti-btn-sm" id="yeti-like-btn" data-clicked="true">
+        <span id="yeti-btn-sm-icon-like">👍<span id="yeti-btn-sm-like-clicked"></span></span>
+        <span id="yeti-btn-sm-text-like" class="yeti-btn-sm-text">10</span>
+      </div>
+      <div class="yeti-btn-sm" id="yeti-dislike-btn">
+        <span id="yeti-btn-sm-icon-dislike">👎<span id="yeti-btn-sm-dislike-clicked"></span></span>
+        <span id="yeti-btn-sm-text-dislike" class="yeti-btn-sm-text">75</span>
+      </div>
+      <div class="yeti-btn-sm yeti-btn-sm-expand" id="yeti-favourite-btn">
+        <span class="yeti-btn-sm-expand-icon" id="yeti-btn-sm-icon-favourite">❤</span>
+        <span class="yeti-btn-sm-text" id="yeti-btn-sm-text-favourite">998</span>
+      </div>
+      <div class="yeti-btn-sm yeti-btn-sm-expand" id="yeti-visit-btn">
+        <span class="yeti-btn-sm-expand-icon" id="yeti-btn-sm-icon-visit">👣</span>
+        <span class="yeti-btn-sm-text" id="yeti-btn-sm-text-visit">>1k</span>
+      </div>
+      
+    </div>
+    
+
+  </div>
+
+
+  </div>
+  
+
+  </div>
+
+</div>
+
+<link rel="stylesheet" href="content_style.css">
+
+<script src="content_script.js"> </script>
+  `
   let banner = $.parseHTML(htmlString);
+  console.log("XXXXX");
   $('body').append(banner);
 
 }

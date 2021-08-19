@@ -1,0 +1,210 @@
+#yeti-container {
+  margin: 0;
+  font-size: 1rem;
+  display: flex;
+  flex: 1;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#yeti-widget {
+  position: absolute;
+  z-index: 9;
+  /* background-color: #f1f1f1; */
+  /* border: 1px solid #d3d3d3; */
+  display: flex;
+  height: 250px;
+  
+  /* text-align: center; */
+}
+
+#yeti-widget-content-lg {
+  background-color: #eeeeee;
+  border-radius: 5%;
+  border: 1px solid #d3d3d3;
+  margin-right: 2px;
+  width: 300px;
+  height: 400px;
+}
+
+#yeti-widget-content-lg-nav {
+  background-color: #2196F3;
+  /* border: 1px solid black; */
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 37px;
+  border-radius: 5%;
+}
+
+#yeti-widget-content-lg-nav:active {
+  cursor: grabbing;
+}
+
+#yeti-widget-content-lg-close {
+  /* background-color: #2196F3; */
+  border: 1px solid #f3f3f3;
+  cursor:pointer;
+  margin: 5px;
+  color: white;
+}
+#yeti-widget-content-lg-title {
+  /* border: 1px solid black; */
+  font-size: 20px;
+  color: white;
+}
+
+#yeti-widget-content-lg-content {
+  /* overflow: scroll; */
+  /* border: 1px solid black; */
+  height: 363px;
+}
+
+.yeti-widget-content-open {
+  height: 360px;
+  overflow: scroll;
+}
+
+#yeti-widget-nav {
+  /* padding: 10px; */
+  /* cursor: grabbing;
+  cursor: -moz-grab; */
+  cursor: -webkit-grab;
+  z-index: 10;
+  background-color: #2196F3;
+  color: #fff;
+  /* width: 4.5rem; */
+  height: 37px;
+  border-radius: 10%;
+  text-align: center;
+}
+
+#yeti-widget-nav:active {
+  cursor: grabbing;
+}
+
+#yeti-widget-content-sm {
+  /* position: absolute; */
+  display: flex;
+  flex-direction: column;
+  width: 4rem;
+  /* height: 12rem; */
+  align-content: center;
+  justify-content: space-between;
+  background-color:#eeeeee;
+  border: 1px solid #d3d3d3;
+  border-radius: 3%;
+  /* margin: 30px; */
+}
+
+.yeti-btn-sm {
+  display: flex;
+  /* flex: 1 1 1; */
+  /* flex-basis: 2rem; */
+  cursor:pointer;
+  margin: 5px;
+  /* border-radius: 10%; */
+  /* border: 1px solid red; */
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background-color: #dddddd;
+  border: none;
+  border-radius: 5%;
+  box-shadow: 2px 5px #999;
+}
+.yeti-btn-sm:hover {
+  background-color: #bbbbbb;
+}
+.yeti-btn-sm:active {
+  background-color: #bbbbbb;
+  box-shadow: 0 1px #666;
+  transform: translateY(4px);
+}
+.yeti-btn-open {
+  background-color: #bbbbbb;
+  box-shadow: 0 1px #666 !important;
+}
+.yeti-btn-clicked {
+  background-color: #bbbbbb;
+}
+
+#yeti-btn-sm-icon-like {
+  font-size: 1rem;
+  text-align: right;
+  /* flex: 1; */
+  /* border: 1px solid black; */
+}
+#yeti-btn-sm-icon-dislike {
+  font-size: 1rem;
+  text-align: right;
+  flex: 1;
+  /* border: 1px solid black; */
+}
+
+
+
+.yeti-btn-sm-expand {
+  transition: all 0.1s;
+  box-shadow: 1px 3px;
+  border: none;
+}
+.yeti-btn-sm-expand .yeti-btn-sm-expand-icon {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  /* transition: 0.5s; */
+}
+.yeti-btn-sm-expand .yeti-btn-sm-expand-icon:after {
+  content: '\00ab';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: 30px;
+  /* transition: 0.5s; */
+}
+.yeti-btn-sm-expand:hover .yeti-btn-sm-expand-icon {
+  padding-left: 15px;
+}
+.yeti-btn-sm-expand:hover .yeti-btn-sm-expand-icon:after {
+  opacity: 1;
+  right: 25px;
+  /* border: 1px solid black; */
+}
+
+
+
+#yeti-btn-sm-icon-favourite {
+  font-size: 1.1rem;
+  text-align: right;
+  flex: 1;
+  /* border: 1px solid black; */
+}
+
+#yeti-btn-sm-icon-visit {
+  font-size: 1rem;
+  /* text-align: right; */
+  flex: 1;
+  /* border: 1px solid black; */
+}
+.yeti-btn-sm-text {
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: left;
+  
+  /* border: 1px solid black; */
+}
+
+#yeti-widget-icon {
+  width: 35px;
+  color: white;
+}
+
+.yeti-remove {
+  display: none;
+  visibility: hidden;
+
+  /* transition:  0.5s; */
+}
