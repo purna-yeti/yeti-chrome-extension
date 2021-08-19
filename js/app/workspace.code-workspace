@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../.."
+		},
+		{
+			"path": "../../../yeti_python_backend"
 		}
 	],
 	"settings": {}

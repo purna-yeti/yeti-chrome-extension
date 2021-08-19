@@ -1,4 +1,4 @@
-// console.log('content script ran');
+console.log('content script ran');
 
 const page = {
   uri: window.location.href,
@@ -6,12 +6,25 @@ const page = {
   pathname: window.location.pathname,
   search: window.location.search,
   title: document.title,
+  hash: window.location.hash,
 }
 const likeIcon = '<i class="fa fa-thumbs-up"></i>';
 const dislikeIcon = '<i class="fa fa-thumbs-down"></i>';
 const favIcon = '<i class="fa fa-heart"></i>';
 const pawIcon = '<i class="fa fa-paw"></i>';
 
+
+let s = document.createElement('script');
+s.type = 'text/javascript';
+s.src = chrome.extension.getURL('angular.elements.bundle.js');
+s.onload = function() {
+    this.parentNode.removeChild(this);
+};
+try {
+    (document.head || document.documentElement).appendChild(s);
+} catch (e) {
+    console.log(e);
+}
 
 function handleStatusClick(buttonId, textId, statusKey, statusVal) {
   // console.log('content statusClick', buttonId, textId, statusKey, statusVal);
@@ -92,65 +105,75 @@ function appendText() {
       <div id="yeti">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
-        .yeti-btn {
-          background-color: DodgerBlue;
-          border: none;
-          color: white;
-          padding: 8px 6px;
-          font-size: 14px;
-          cursor: pointer;
-          width: 60px;
-          border-radius: 15px;
-          top: 50%;
-        }
-        .yeti-btn-clicked {
-          background-color: RoyalBlue;
-          border: none;
-          color: white;
-          padding: 8px 6px;
-          font-size: 14px;
-          cursor: pointer;
-          width: 60px;
-          border-radius: 15px;
-          top: 50%;
-        }
-        .yeti-btn:hover {
-          background-color: RoyalBlue;
-        }
-        .yeti-btn-clicked:hover {
-          background-color: DodgerBlue;
-        }
-        .yeti-recommend {
-          background-color: gray;
-          font-size: 14px;
-          padding: 8px 6px;
-          text-color: white;
-        }
-        .yeti-banner {
-          all: initial; 
-          position:fixed; 
-          bottom: 0%; 
-          right:0;
-          z-index: 10000;
-        }
-        .yeti-banner-logout {
-          background-color: DodgerBlue;
-          border: none;
-          color: white;
-        }
-        .yeti-title {
-          color: white;
-        }
-        .yeti-text {
-          color: white;
-        }
+          .yeti-btn {
+            background-color: DodgerBlue;
+            border: none;
+            color: white;
+            padding: 8px 6px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 60px;
+            border-radius: 15px;
+            top: 50%;
+          }
+          .yeti-btn-clicked {
+            background-color: RoyalBlue;
+            border: none;
+            color: white;
+            padding: 8px 6px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 60px;
+            border-radius: 15px;
+            top: 50%;
+          }
+          .yeti-btn:hover {
+            background-color: RoyalBlue;
+          }
+          .yeti-btn-clicked:hover {
+            background-color: DodgerBlue;
+          }
+          .yeti-recommend {
+            background-color: gray;
+            font-size: 14px;
+            padding: 8px 6px;
+            text-color: white;
+          }
+          .yeti-banner {
+            all: initial; 
+            position:fixed; 
+            bottom: 0%; 
+            right:0;
+            z-index: 10000;
+          }
+          .yeti-banner-logout {
+            background-color: DodgerBlue;
+            border: none;
+            color: white;
+          }
+          .yeti-title {
+            color: white;
+          }
+          .yeti-text {
+            color: white;
+          }
         </style>
         <div id="yeti-banner" class="yeti-banner">
+        
+        <h1 ng-controller="HelloWorldCtrl">{{message}}</h1>
+         <script>  
+              angular.module("app", []).controller("HelloWorldCtrl", function($scope) {  
+                console.log("XXXXXXXXXXXXX");
+                $scope.message="Hello World"; 
+              } )
+          </script> 
          </div>
+
+         
         
       </div>
       `
   let banner = $.parseHTML(htmlString);
   $('body').append(banner);
-  
+
 }
