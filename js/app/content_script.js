@@ -77,7 +77,7 @@ function closeContent() {
 
 function enableDragElement() {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-
+  console.log({widget});
   widget.onmousedown = dragMouseDown;
   closeContentLgIcon.onmousedown = null;
 
